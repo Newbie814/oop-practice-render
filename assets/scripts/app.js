@@ -7,7 +7,34 @@ class Product {
   }
 }
 
-class ShoppingCart {
+class ElementAttribute {
+  constructor(attributeName, attributeValue) {
+    this.name = attributeName;
+    this.value = attributeValue;
+  }
+}
+
+class Component {
+  constructor(renderHookId) {
+    this.hookId = renderHookId;
+  }
+
+  createRootElement(tag, cssClasses, attributes) {
+    const rootElement = document.createElement(tag);
+    if (cssClasses) {
+      rootElement.className = cssClasses;
+    }
+    if (attributes && attributes.length > 0) {
+      for (const attribute of attributes) {
+        rootElement.setAttribute(attribute.name, attribute.value);
+      }
+    }
+    document.getElementById(this.hookId).append(rootElement);
+    return rootElement;
+  }
+}
+
+class ShoppingCart extends Component {
   items = [];
 
   set cartItems(value) {
@@ -27,6 +54,10 @@ class ShoppingCart {
     return sum;
   }
 
+  constructor(renderHookId) {
+    super(renderHookId);
+  }
+
   addProduct(product) {
     const updatedItems = [...this.items];
     updatedItems.push(product);
@@ -35,14 +66,13 @@ class ShoppingCart {
   }
 
   render() {
-    const cartElement = document.createElement('section');
+    const cartElement = this.createRootElement('section', 'cart');
     cartElement.innerHTML = `
       <h2>Total: \$${0}</h2>
       <button>Order</button>
       `;
-    cartElement.className = 'cart';
+
     this.totalOutput = cartElement.querySelector('h2');
-    return cartElement;
   }
 }
 
@@ -95,6 +125,9 @@ class ProductList {
       0.03
     ),
   ];
+
+  constructor() {}
+
   render() {
     const productList = document.createElement('ul');
     productList.className = 'product-list';
@@ -110,13 +143,11 @@ class ProductList {
 class Shop {
   render() {
     const renderHook = document.getElementById('app');
-    this.cart = new ShoppingCart();
-    const cartElement = this.cart.render();
-
+    this.cart = new ShoppingCart('app');
+    this.cart.render();
     const productList = new ProductList();
     const productListElement = productList.render();
 
-    renderHook.append(cartElement);
     renderHook.append(productListElement);
   }
 }
