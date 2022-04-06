@@ -10,9 +10,28 @@ class Product {
 class ShoppingCart {
   items = [];
 
+  set cartItems(value) {
+    this.items = value;
+    this.totalOutput.innerHTML = `<h2>Total: \$${this.totalPrice.toFixed(
+      2
+    )}</h2>`;
+    // console.log(this.totalPrice);
+  }
+
+  get totalPrice() {
+    const sum = this.items.reduce(
+      (previousValue, CurrentItem) => previousValue + CurrentItem.price,
+      0
+    );
+    // console.log(sum);
+    return sum;
+  }
+
   addProduct(product) {
-    this.items.push(product);
-    this.totalOutput.innerHTML = `<h2>Total: \$${1}</h2>`;
+    const updatedItems = [...this.items];
+    updatedItems.push(product);
+    this.cartItems = updatedItems;
+    console.log(updatedItems);
   }
 
   render() {
@@ -61,19 +80,19 @@ class ProductList {
       'Trip to a Black Hole',
       'https://res.cloudinary.com/dylvkdabj/image/upload/v1648871780/website%20pics%20family/black_hole_banner_mpkvhc.jpg',
       'A crushing experience.',
-      '100,000.73'
+      100000.73
     ),
     new Product(
       'Fan Ride with the Guardians of the Galaxy',
       'https://res.cloudinary.com/dylvkdabj/image/upload/v1646514283/website%20pics%20family/wp2647127-space-wallpaper-hd_irkddn.jpg',
       'A side splitting adventure.',
-      '100,000,765.73'
+      105943001.65
     ),
     new Product(
       'Mosey on down to Natchez, Mississippi',
       'https://res.cloudinary.com/dylvkdabj/image/upload/v1649113933/website%20pics%20family/27natchez1-jumbo_xcei5l.jpg',
       'An ambien-like affair',
-      '00.03'
+      0.03
     ),
   ];
   render() {
